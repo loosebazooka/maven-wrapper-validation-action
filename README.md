@@ -8,7 +8,7 @@ Inspired by https://github.com/gradle/wrapper-validation-action
 ## What this does
 - Designed for https://github.com/takari/maven-wrapper
 - Checks if the `maven-wrapper.jar` checked into the repo matches the file on [maven.org](https://search.maven.org/artifact/io.takari/maven-wrapper) by comparing `sha256` hashes
-  - NOTE: The action downloads the maven-wrapper artifact to verify the hash since maven.org currently only store cryptographically insecure md5 and sha1 hashes.
+  - NOTE: The action downloads the maven-wrapper artifact to verify the hash since maven.org currently only store cryptographically insecure `md5` and `sha1` hashes.
 
 ## What this does NOT do
 - Does NOT verify pgp signatures or signatures of any kind
