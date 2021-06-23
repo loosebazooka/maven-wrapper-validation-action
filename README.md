@@ -17,7 +17,7 @@ Inspired by https://github.com/gradle/wrapper-validation-action
 - Does NOT prevent against attacks on maven.org (this action assumes it is safe)
 
 ## How to use
-- Create a new action with the following configuration
+Create a new action with the following configuration
 ```
 name: Validate maven wrapper 
 
