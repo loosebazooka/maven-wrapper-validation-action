@@ -5,6 +5,8 @@ A simple search for `filename:maven-wrapper.jar` on GitHub reveals over half a m
 
 Inspired by https://github.com/gradle/wrapper-validation-action
 
+This is developed as part of the OpenSSF Digital Identity WG.
+
 ## What this does
 - Designed for https://github.com/takari/maven-wrapper
 - Checks if the `maven-wrapper.jar` checked into the repo matches the file on [maven.org](https://search.maven.org/artifact/io.takari/maven-wrapper) by comparing `sha256` hashes
