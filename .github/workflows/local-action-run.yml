@@ -1,4 +1,4 @@
-name: Create a sample provenance
+name: Test the action for success
 
 on:
   workflow_dispatch:
