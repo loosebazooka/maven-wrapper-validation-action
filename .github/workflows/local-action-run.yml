@@ -5,8 +5,8 @@ on:
   
 jobs:
   check:
-  runs-on: ubuntu-latest
-  steps:
+    runs-on: ubuntu-latest
+    steps:
     - name: check valid file
       uses: ./
       with:
