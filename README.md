@@ -31,3 +31,11 @@ jobs:
       - uses: actions/checkout@v2
       - uses: loosebazooka/maven-wrapper-validation-action@<tbd>
 ```
+
+## How it works
+1. Look for `.mvn/wrapper/maven-wrapper.jar` in repo
+2. Calculate `local-sha256`
+3. Look inside `maven-wrapper.jar/META-INF/MANIFEST.MF` for `Implementation-Version`
+4. Look for the artifact `io.takari:maven-wrapper:<version>` on maven.org
+5. Download the artifact and cacluate `remote-sha256`
+6. Check if `local-sha256` == `remote-sha256`
