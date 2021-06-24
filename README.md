@@ -19,6 +19,8 @@ This is developed as part of the OpenSSF Digital Identity WG.
 - Does NOT prevent against attacks on maven.org (this action assumes it is safe)
 
 ## How to use
+NOTE: This action is not yet published
+
 Create a new action with the following configuration
 ```yaml
 name: Validate maven wrapper 
