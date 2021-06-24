@@ -21,7 +21,7 @@ branding:
   color: orange
 
 inputs:
-  wrapper_path:  
+  wrapper-path:  
     description: 'path to wrapper in the repository'
     required: true
     default: '.mvnw/wrapper/maven-wrapper.jar'
