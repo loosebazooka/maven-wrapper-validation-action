@@ -29,5 +29,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: loosebazooka/maven-wrapper-validation-action@0.9
+      - uses: loosebazooka/maven-wrapper-validation-action@v0.1
 ```
