@@ -16,6 +16,10 @@
 
 name: 'Validate Maven Wrapper Action'
 description: 'Check if io.takari maven wrapper jar matches Maven Central'
+branding:
+  icon: lock
+  color: orange
+
 inputs:
   wrapper_path:  
     description: 'path to wrapper in the repository'
