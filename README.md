@@ -18,7 +18,7 @@ Inspired by https://github.com/gradle/wrapper-validation-action
 
 ## How to use
 Create a new action with the following configuration
-```
+```yaml
 name: Validate maven wrapper 
 
 on: [push, pull_request]
