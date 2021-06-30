@@ -21,12 +21,12 @@ branding:
   color: orange
 
 inputs:
-  wrapper-path:  
-    description: 'path to wrapper in the repository'
+  path:  
+    description: 'path to a maven-wrapper.jar or a directory to start searching for maven-wrapper.jar files'
     required: true
     default: '.mvnw/wrapper/maven-wrapper.jar'
 runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
-  - '${{ inputs.wrapper-path }}'
+  - '${{ inputs.path }}'

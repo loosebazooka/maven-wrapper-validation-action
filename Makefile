@@ -13,13 +13,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-.PHONY: all validate clean test e2e
+.PHONY: all validate clean test e2e gen
 
 SRCS = $(shell find cmd -iname "*.go") $(shell find internal -iname "*.go")
 
 # maybe do some LDFLAGS things here
 
 all: validate
+
+gen:
+	go generate -tags gen ./internal/unicode/generator
+	gofmt -s -w ./internal/unicode/chars.go
 
 format:
 	gofmt -s -w ./cmd/ ./internal/
