@@ -8,7 +8,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2.3.4
-    - name: Use action definition in rep
+    - name: Use action definition in repo with search root
       uses: ./
       with:
-        wrapper-path: tests/e2e/testdata/maven-wrapper.jar
+        path: tests/e2e/testdata/good
+
+    - name: Use action definition in repo wiht artifact path
+      uses: ./
+      with:
+        path: tests/e2e/testdata/good/maven-wrapper.jar

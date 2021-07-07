@@ -35,31 +35,84 @@ func runCli(t *testing.T, arg ...string) (string, error) {
 }
 
 func TestGoodArtifact(t *testing.T) {
-	out, err := runCli(t, "testdata/maven-wrapper.jar")
+	out, err := runCli(t, "testdata/good/maven-wrapper.jar")
 	if err != nil {
 		t.Log(out)
 		t.Fatal("Unexpected failure on good artifact", err)
 	}
 }
 
-func TestBadSha(t *testing.T) {
-	out, err := runCli(t, "testdata/maven-wrapper-bad-sha.jar")
-	if err == nil {
+func TestGoodSearchRoot(t *testing.T) {
+	out, err := runCli(t, "testdata/good")
+	if err != nil {
 		t.Log(out)
-		t.Fatal("Unexpected pass on bad artifact")
-	} else if !strings.Contains(out, "corrupt wrapper detected") {
-		t.Log(out)
-		t.Fatal("Unknown failure type")
+		t.Fatal("Unexpected failure on good artifact", err)
 	}
 }
 
-func TestUnknownVersion(t *testing.T) {
-	out, err := runCli(t, "testdata/maven-wrapper-unknown-version.jar")
-	if err == nil {
-		t.Log(out)
-		t.Fatal("Unexpected pass on bad artifact")
-	} else if !strings.Contains(out, "could not retrieve remote artifact -- status code:404") {
-		t.Log(out)
-		t.Fatal("Unknown failure type")
+func TestBadArtifact(t *testing.T) {
+	type TestCase struct {
+		path   string
+		errMsg string
+	}
+
+	testcases := []TestCase{{
+		path:   "testdata/bad-sha/maven-wrapper.jar",
+		errMsg: "corrupt wrapper detected",
+	}, {
+		path:   "testdata/unknown-version/maven-wrapper.jar",
+		errMsg: "could not retrieve remote artifact -- status code:404",
+	}, {
+		path:   "testdata/homoglyph/maven-wrappеr.jar",  // non english unicode e (U+0435) in maven-wrapp"e"r
+		errMsg: "Specified file is not named maven-wrapper.jar",
+	}}
+
+	for _, tc := range testcases {
+		t.Run(tc.path, func(t *testing.T) {
+			out, err := runCli(t, tc.path)
+			if err == nil {
+				t.Log(out)
+				t.Fatal("Unexpected error free execution")
+			} else if !strings.Contains(out, tc.errMsg) {
+				t.Log(out)
+				t.Fatal("Unexpected error")
+			}
+		})
+	}
+}
+
+func TestBadSearchRoots(t *testing.T) {
+	type TestCase struct {
+		path   string
+		errMsg string
+	}
+
+	testcases := []TestCase{{
+		path:   "testdata", // contains all test wrappers, good and bad
+		errMsg: "Failed ",
+	}, {
+		path:   "testdata/none",
+		errMsg: "Failed to find any maven-wrapper.jar files",
+	}, {
+		path:   "testdata/bad-sha",
+		errMsg: "corrupt wrapper detected",
+	}, {
+		path:   "testdata/unknown-version",
+		errMsg: "could not retrieve remote artifact -- status code:404",
+	}, {
+		path:   "testdata/homoglyph",
+		errMsg: "Potentially fraudulent maven wrapper at:",
+	}}
+	for _, tc := range testcases {
+		t.Run(tc.path, func(t *testing.T) {
+			out, err := runCli(t, tc.path)
+			if err == nil {
+				t.Log(out)
+				t.Fatal("Unexpected error free execution")
+			} else if !strings.Contains(out, tc.errMsg) {
+				t.Log(out)
+				t.Fatal("Unexpected error")
+			}
+		})
 	}
 }

@@ -22,6 +22,7 @@ This is developed as part of the OpenSSF Digital Identity WG.
 NOTE: This action is not yet published
 
 Create a new action with the following configuration
+
 ```yaml
 name: Validate maven wrapper 
 
@@ -34,10 +35,16 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: loosebazooka/maven-wrapper-validation-action@<tbd>
+      # with:
+      #   path: <optional path input>
 ```
+### Configuration
+
+The action has the following parameters
+- `path`: path to a maven-wrapper.jar or a directory to start searching for maven-wrapper.jar files
 
 ## How it works
-1. Look for `.mvn/wrapper/maven-wrapper.jar` in repo
+1. For each instance of `maven-wrapper.jar` (user specified or search)
 2. Calculate `local-sha256`
 3. Look inside `maven-wrapper.jar/META-INF/MANIFEST.MF` for `Implementation-Version`
 4. Look for the artifact `io.takari:maven-wrapper:<version>` on maven.org

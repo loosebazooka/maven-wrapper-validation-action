@@ -17,78 +17,53 @@ package main
 
 import (
 	"context"
-	"crypto/sha256"
-	"encoding/hex"
-	"fmt"
-	"io"
 	"log"
 	"os"
 	"os/signal"
+	"path/filepath"
 
-	"github.com/loosebazooka/mvn-validate/internal/jar"
-	"github.com/loosebazooka/mvn-validate/internal/maven"
+	"github.com/loosebazooka/mvn-validate/internal/file"
 )
 
 func main() {
 	if len(os.Args) != 2 {
-		log.Fatalf("Usage: %q <path to maven-wrapper.jar>", os.Args[0])
+		log.Fatalf("Usage: %q <search root | path to maven-wrapper.jar>", os.Args[0])
 	}
 
-	jarFile := os.Args[1]
+	path := os.Args[1]
+
+	info, err := os.Stat(path)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer cancel()
 
-	err := validate(ctx, jarFile)
-	if err != nil {
-		log.Fatal("Failed to validate Jar: ", err)
+	if info.IsDir() { // search
+		wrappers, err := file.FindMavenWrappers(path)
+		if err != nil {
+			log.Fatal("Failed during search for maven-wrapper.jar: ", err)
+		}
+		if len(wrappers) == 0 {
+			log.Fatal("Failed to find any maven-wrapper.jar files")
+		} // do search
+		for _, w := range wrappers {
+			err := validate(ctx, w)
+			if err != nil {
+				log.Fatal("Failed to validate Jar: ", err)
+			}
+		}
+	} else { // single file
+		if filepath.Base(path) != "maven-wrapper.jar" {
+			log.Fatal("Specified file is not named maven-wrapper.jar: ", path)
+		}
+		err := validate(ctx, path)
+		if err != nil {
+			log.Fatal("Failed to validate Jar: ", err)
+		}
 	}
 
 	// success
 	os.Exit(0)
-}
-
-func validate(ctx context.Context, jarFile string) error {
-	file, err := os.Open(jarFile)
-	if err != nil {
-		return err
-	}
-	h := sha256.New()
-	if _, err := io.Copy(h, file); err != nil {
-		return err
-	}
-
-	sb := h.Sum(make([]byte, 0, h.Size()))
-	localSha := hex.EncodeToString(sb)
-
-	manifest, err := jar.ExtractManifest(jarFile)
-	if err != nil {
-		return err
-	}
-
-	version, err := manifest.ImplementationVersion()
-	if err != nil {
-		return err
-	}
-
-	artifact := maven.MavenCentral.Artifact("io.takari", "maven-wrapper", version)
-
-	remoteSha, err := artifact.CalculateSHA256(ctx)
-	if err != nil {
-		return err
-	}
-
-	if localSha != remoteSha {
-		return &errMismatch{localSha, remoteSha}
-	}
-	return nil
-}
-
-type errMismatch struct {
-	local  string
-	remote string
-}
-
-func (e *errMismatch) Error() string {
-	return fmt.Sprintf("corrupt wrapper detected\nlocal sha256: %s\nremote sha256: %s", e.local, e.remote)
 }

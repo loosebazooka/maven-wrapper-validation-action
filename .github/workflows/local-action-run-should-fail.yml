@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2.3.4
-    - name: Use action definition in rep
+    - name: Use action definition in repo
       uses: ./
       with:
-        wrapper-path: tests/e2e/testdata/maven-wrapper-bad-sha.jar
+        path: tests/e2e/testdata
